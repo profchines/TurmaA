@@ -1,5 +1,5 @@
-import { ExeComponent } from './components/ExeComponent'
 import { Rotas } from './routes'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
 
