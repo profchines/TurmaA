@@ -1,44 +1,34 @@
 import { SyntheticEvent, useCallback, useRef, useState } from 'react'
-import axios from 'axios'
 import styles from './styles.module.css'
 
-export default function Login() {
+export default function PaginaDeExemplo() {
 
+    let variavel = 1
     const refForm = useRef<any>();
+    const refContador = useRef(0);
 
+    // get and seters
+    const [estado, setEstado] = useState(0)
+
+    function formulario() {
+
+    }
+
+    // const funcaoForm = useCallback(() => {}, [])
+    
+
+    // HOOKS DO REACT - É TUDO QUE COMEÇA COM USE
+    // REACT É UMA BILIOTECA!!! NÃO É UM FRAMEOWRK
     const submitForm = useCallback((event: SyntheticEvent) => {
 
         event.preventDefault();
 
-        if (refForm.current.checkValidity()) {
+        console.log('ESTADO DO PARANA enviou formulario')
+        console.log(estado) 
+        console.log('refContador.current') 
+        console.log(refContador.current)
 
-            const target = event.target as typeof event.target & {
-                email: { value: string },
-                senha: { value: string }
-            }
-
-
-            axios.post('http://localhost:3001/login',
-                {
-                    email: target.email.value,
-                    password: target.senha.value,
-                }
-            ).then((resposta) => {
-                console.log('deu bao')
-                console.log(resposta.data)
-            }).catch((erro) => {
-                console.log('deu ruim')
-                console.log(erro)
-            })
-        
-
-            console.log(target.email.value)
-
-        } else {
-            refForm.current.classList.add('was-validated')
-        }
-
-    }, [])
+    }, [estado])
 
     return (
         <>
@@ -51,6 +41,9 @@ export default function Login() {
                     <div
                         className='d-flex flex-column align-items-center'
                     >
+                        {/*  hooks React */ }
+                        <h1 className='text-primary'>Estado {estado}</h1>
+                        <h1 className='text-primary'>REF {refContador.current}</h1>
                         <h1 className='text-primary'>Login</h1>
                         <p
                             className='text-secondary'
@@ -121,6 +114,26 @@ export default function Login() {
                                 id='botao'
                             >
                                 Enviar
+                            </button>
+                            <button
+                                className='btn btn-warning w-100'
+                                type='button'
+                                id='botao'
+                                onClick={() => {
+                                    setEstado(estado+1)
+                                }}
+                            >
+                                Estado
+                            </button>
+                            <button
+                                className='btn btn-warning w-100'
+                                type='button'
+                                id='botao'
+                                onClick={() => {
+                                    refContador.current = refContador.current + 1
+                                }}
+                            >
+                                Ref
                             </button>
                         </div>
                     </form>
