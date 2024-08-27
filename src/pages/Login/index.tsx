@@ -1,16 +1,27 @@
 import { SyntheticEvent, useCallback, useRef, useState } from 'react'
 import axios from 'axios'
 import styles from './styles.module.css'
+import { Loading } from '../../components/Loading';
+import { Toast } from '../../components/Toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
+    // Hooks
+    const navigate = useNavigate();
+
     const refForm = useRef<any>();
+
+    const [loading, setLoading] = useState(false)
+    const [toast, setToast] = useState(false)
 
     const submitForm = useCallback((event: SyntheticEvent) => {
 
         event.preventDefault();
 
         if (refForm.current.checkValidity()) {
+
+            setLoading(true)
 
             const target = event.target as typeof event.target & {
                 email: { value: string },
@@ -24,15 +35,23 @@ export default function Login() {
                     password: target.senha.value,
                 }
             ).then((resposta) => {
+
                 console.log('deu bao')
                 console.log(resposta.data)
+
+
+               
+                navigate('/dashboard')
+
+
             }).catch((erro) => {
                 console.log('deu ruim')
                 console.log(erro)
+                setLoading(false)
+                setToast(true)
             })
-        
 
-            console.log(target.email.value)
+
 
         } else {
             refForm.current.classList.add('was-validated')
@@ -42,6 +61,15 @@ export default function Login() {
 
     return (
         <>
+            <Loading
+                visible={loading}
+            />
+            <Toast
+                show={toast}
+                message='Dados inválidos'
+                colors='danger'
+                onClose={() => { setToast(false) }}
+            />
             <div
                 className={styles.main}
             >
