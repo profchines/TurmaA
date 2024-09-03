@@ -1,4 +1,20 @@
-export const LayoutDashboard = () => {
+import { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { IToken } from '../../interfaces/token'
+
+//Exemplo enterder undefined ou null
+let Pessoa = {
+    nome: "Junior",
+    email: null,
+    // idade: undefined
+}
+
+interface IProps {
+    children: ReactNode
+    token?: IToken | null
+}
+
+export const LayoutDashboard = (props: IProps) => {
     return (
         <>
 
@@ -24,7 +40,11 @@ export const LayoutDashboard = () => {
                 <div className="w-100"></div>
                 <div className="navbar-nav">
                     <div className="nav-item text-nowrap">
-                        <a className="nav-link px-3" href="#">Sair</a>
+                        <Link
+                            className="nav-link px-3"
+                            to="/">
+                            Sair
+                        </Link>
                     </div>
                 </div>
             </header>
@@ -38,12 +58,12 @@ export const LayoutDashboard = () => {
                         <div className="position-sticky pt-3">
                             <ul className="nav flex-column">
                                 <li className="nav-item">
-                                    <a
+                                    <Link
                                         className={`nav-link`}
-                                        href={'/dashboard'}
+                                        to={'/dashboard'}
                                     >
                                         Dashboard
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
@@ -53,8 +73,7 @@ export const LayoutDashboard = () => {
                     <main
                         className="col-md-9 ms-sm-auto col-lg-10 px-md-4"
                     >
-
-
+                        {props.children}
                     </main>
 
                 </div>

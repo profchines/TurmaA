@@ -39,7 +39,10 @@ export default function Login() {
                 console.log('deu bao')
                 console.log(resposta.data)
 
-
+                localStorage.setItem(
+                    'americanos.token',
+                    JSON.stringify(resposta.data)
+                )
                
                 navigate('/dashboard')
 

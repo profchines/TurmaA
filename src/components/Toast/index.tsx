@@ -8,6 +8,11 @@ interface IProps extends ToastProps {
     message: string
 }
 
+// Exemplo
+interface IPropsTeste {
+    onClose: () => void
+}
+
 export const Toast = (props: IProps) => {
     return (
         <ToastBootstrap

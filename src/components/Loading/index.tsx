@@ -4,6 +4,7 @@ interface IProps {
 }
 
 export const Loading = (props: IProps) => {
+
     return (
         props.visible &&
         <div
