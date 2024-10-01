@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom"
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom"
 import { IToken } from "../../../interfaces/token";
 import { verificaTokenExpirado } from "../../../services/token";
 import { LayoutDashboard } from "../../../components/LayoutDashboard";
@@ -9,7 +9,7 @@ import axios from "axios";
 interface IForm {
     nome: string
     email: string
-    password: string
+    password?: string
     permissoes: string
 }
 
@@ -18,12 +18,17 @@ export default function GerenciarUsuarios() {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setValue
     } = useForm<IForm>()
 
     const refForm = useRef<any>();
 
     const navigate = useNavigate();
+
+    const { id } = useParams()
+
+    const [isEdit, setIsEdit] = useState<boolean>(false)
 
     // Inicio, Update State, Destruir
     useEffect(() => {
@@ -42,28 +47,76 @@ export default function GerenciarUsuarios() {
             navigate("/")
         }
 
-        console.log("Pode desfrutar do sistema :D")
+        // console.log("Pode desfrutar do sistema :D")
+
+        const idUser = Number(id)
+
+        console.log(import.meta.env.VITE_URL)
+        if (!isNaN(idUser)) {
+            // editar
+
+            // sweetalert2
+            axios.get(import.meta.env.VITE_URL +
+                '/users?id=' + idUser)
+                .then((res) => {
+                    setIsEdit(true)
+
+                    // seed - BD - backend(Parecido com migrations)
+
+                    setValue("nome", res.data[0].nome)
+                    setValue("email", res.data[0].email)
+                    setValue("permissoes", res.data[0].permissoes)
+
+
+                })
+        }
 
     }, [])
 
     const submitForm: SubmitHandler<IForm> = useCallback(
         (data) => {
 
-            axios.post('http://localhost:3001/users',
-                data
-            ).then((res) => {
-                navigate('/usuarios')
-            })
-                .catch((err) => {
-                    console.log(err)
-                })
+            if (isEdit) {
+                // esta editando
 
-        }, [])
+                if (data.password?.trim() === '') {
+                    delete data.password
+                }
+
+                // Loading true
+                axios.put(import.meta.env.VITE_URL +
+                    '/users/' + id,
+                    data
+                )
+                    .then((res) => {
+                        navigate('/usuarios')
+                    })
+                    .catch((err) => {
+                        // COLOCAR ALERT DE ERRO!!
+                    })
+            } else {
+
+                // cadastrando
+                axios.post('http://localhost:3001/users',
+                    data
+                ).then((res) => {
+                    navigate('/usuarios')
+                })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+
+            }
+
+
+        }, [isEdit])
 
     return (
         <>
             <LayoutDashboard>
-                <h1>Usuários</h1>
+                <h1>
+                    {isEdit ? "Editar Usuário" : " Adicionar Usuário"}
+                </h1>
 
                 <form
                     className="row g-3 needs-validation mb-3"
@@ -146,9 +199,9 @@ export default function GerenciarUsuarios() {
                             id="permissoes"
                             required
                             {
-                                ...register("permissoes",
-                                    {required: 'Selecione'}
-                                )
+                            ...register("permissoes",
+                                { required: 'Selecione' }
+                            )
                             }
                         >
                             <option value="">
@@ -178,6 +231,12 @@ export default function GerenciarUsuarios() {
                             className="form-control"
                             placeholder="Yuri"
                             id="password"
+                            // required={!isEdit}
+                            // {
+                            //     ...register('password',
+                            //         {required: isEdit ? undefined : 'Senha é obrigatoria'}
+                            //     )
+                            // }
                             required
                             {...register('password',
                                 {

@@ -1,6 +1,7 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IToken } from '../../interfaces/token'
+import { validaPermissao } from '../../services/token'
 
 //Exemplo enterder undefined ou null
 let Pessoa = {
@@ -11,10 +12,24 @@ let Pessoa = {
 
 interface IProps {
     children: ReactNode
-    token?: IToken | null
 }
 
 export const LayoutDashboard = (props: IProps) => {
+
+    const [token, setToken] = useState<IToken>()
+
+    useEffect(() => {
+        let lsToken =
+            localStorage.getItem('americanos.token')
+
+        let token: IToken | undefined
+
+        if (typeof lsToken === 'string') {
+            token = JSON.parse(lsToken)
+            setToken(token)
+        }
+    }, [])
+
     return (
         <>
 
@@ -65,12 +80,26 @@ export const LayoutDashboard = (props: IProps) => {
                                         Dashboard
                                     </Link>
                                 </li>
+                                {
+                                    validaPermissao(
+                                        ['admin', 'secretarios'],
+                                        token?.user.permissoes
+                                    ) &&
+                                    <li className="nav-item">
+                                        <Link
+                                            className={`nav-link`}
+                                            to={'/usuarios'}
+                                        >
+                                            Usuários
+                                        </Link>
+                                    </li>
+                                }
                                 <li className="nav-item">
                                     <Link
                                         className={`nav-link`}
-                                        to={'/usuarios'}
+                                        to={'/dashboard'}
                                     >
-                                        Usuários
+                                        Voluntarios
                                     </Link>
                                 </li>
                             </ul>

@@ -19,3 +19,21 @@ export const verificaTokenExpirado =
         }
 
     }
+
+
+export const validaPermissao = (
+    permissao: Array<string>,
+    permissaoToken?: string 
+) => {
+    if (permissaoToken) {
+        if (typeof permissaoToken === 'string') {
+            const temAlgumaPermissao = 
+                permissao.includes(permissaoToken)
+
+                // ['Admin','Lamine'].includes('Admin')
+            return temAlgumaPermissao
+        }
+        return false
+    }
+    return false
+}

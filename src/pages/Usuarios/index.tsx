@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { LayoutDashboard } from "../../components/LayoutDashboard"
 import { useEffect, useState } from "react"
 import { IToken } from "../../interfaces/token"
-import { verificaTokenExpirado } from "../../services/token"
+import { validaPermissao, verificaTokenExpirado } from "../../services/token"
 import { Loading } from "../../components/Loading"
 import axios from "axios"
 
@@ -36,6 +36,13 @@ export default function Usuarios() {
         if (!token || verificaTokenExpirado(token.accessToken)) {
 
             navigate("/")
+        }
+
+        if (!validaPermissao(
+            ['admin', 'secretarios'],
+            token?.user.permissoes
+        )) {
+            navigate('/dashboard')
         }
 
         console.log("Pode desfrutar do sistema :D")
@@ -102,6 +109,9 @@ export default function Usuarios() {
                                                 type="submit"
                                                 style={{
                                                     marginRight: 5
+                                                }}
+                                                onClick={() => {
+                                                    navigate(`/usuarios/${usuario.id}`)
                                                 }}
                                             >
                                                 Editar

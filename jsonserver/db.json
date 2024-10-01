@@ -13,6 +13,13 @@
       "nome": "Yuri Alberto",
       "permissoes": "admin",
       "id": 2
+    },
+    {
+      "nome": "Yamal",
+      "email": "lamine@gmail.com",
+      "permissoes": "colaborador",
+      "password": "$2a$10$BR3n0jPf7W7V3waV7B3FvexR0L5nQYVf3MNeyt.0ykcHV0P4EhdsG",
+      "id": 3
     }
   ]
 }
